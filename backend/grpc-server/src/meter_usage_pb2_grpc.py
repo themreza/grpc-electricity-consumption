@@ -6,7 +6,7 @@ import meter_usage_pb2 as meter__usage__pb2
 
 
 class MeterUsageStub(object):
-    """RPC for retrieving meter usage data within a given date range.
+    """RPC for retrieving meter usage data
     """
 
     def __init__(self, channel):
@@ -23,12 +23,11 @@ class MeterUsageStub(object):
 
 
 class MeterUsageServicer(object):
-    """RPC for retrieving meter usage data within a given date range.
+    """RPC for retrieving meter usage data
     """
 
     def ReadData(self, request, context):
-        """If no date range is provided, it will stream the entire time series. It also includes optional pagination.
-        Since there are numerous meter usage data points collected over time, it's better to stream the results
+        """Since there are numerous meter usage data points collected over time, it's better to stream the results
         rather sending a single enormous response payload.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -51,7 +50,7 @@ def add_MeterUsageServicer_to_server(servicer, server):
 
  # This class is part of an EXPERIMENTAL API.
 class MeterUsage(object):
-    """RPC for retrieving meter usage data within a given date range.
+    """RPC for retrieving meter usage data
     """
 
     @staticmethod

@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x11meter_usage.proto\x12\nmeterusage\";\n\x0bReadRequest\x12\x16\n\x0etimestamp_from\x18\x01 \x01(\x03\x12\x14\n\x0ctimestamp_to\x18\x02 \x01(\x03\"-\n\tMeterData\x12\x11\n\ttimestamp\x18\x01 \x01(\x03\x12\r\n\x05value\x18\x02 \x01(\x01\x32L\n\nMeterUsage\x12>\n\x08ReadData\x12\x17.meterusage.ReadRequest\x1a\x15.meterusage.MeterData\"\x00\x30\x01\x62\x06proto3'
+  serialized_pb=b'\n\x11meter_usage.proto\x12\nmeterusage\"\r\n\x0bReadRequest\"-\n\tMeterData\x12\x11\n\ttimestamp\x18\x01 \x01(\x03\x12\r\n\x05value\x18\x02 \x01(\x01\x32L\n\nMeterUsage\x12>\n\x08ReadData\x12\x17.meterusage.ReadRequest\x1a\x15.meterusage.MeterData\"\x00\x30\x01\x62\x06proto3'
 )
 
 
@@ -33,20 +33,6 @@ _READREQUEST = _descriptor.Descriptor(
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
-    _descriptor.FieldDescriptor(
-      name='timestamp_from', full_name='meterusage.ReadRequest.timestamp_from', index=0,
-      number=1, type=3, cpp_type=2, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-    _descriptor.FieldDescriptor(
-      name='timestamp_to', full_name='meterusage.ReadRequest.timestamp_to', index=1,
-      number=2, type=3, cpp_type=2, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -60,7 +46,7 @@ _READREQUEST = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=33,
-  serialized_end=92,
+  serialized_end=46,
 )
 
 
@@ -98,8 +84,8 @@ _METERDATA = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=94,
-  serialized_end=139,
+  serialized_start=48,
+  serialized_end=93,
 )
 
 DESCRIPTOR.message_types_by_name['ReadRequest'] = _READREQUEST
@@ -129,8 +115,8 @@ _METERUSAGE = _descriptor.ServiceDescriptor(
   index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=141,
-  serialized_end=217,
+  serialized_start=95,
+  serialized_end=171,
   methods=[
   _descriptor.MethodDescriptor(
     name='ReadData',

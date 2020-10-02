@@ -14,29 +14,36 @@ _grpc_port = 9090
 
 
 class MeterUsageHandler(RequestHandler):
-    """ Make a connection the gRPC server and receive the stream of data """
     def make_request(self):
+        """
+        Make a connection the gRPC server and receive the stream of data
+        """
         with grpc.insecure_channel('grpc-server:%s' % _grpc_port) as channel:
+            # Subscribe to the channel and read the messages
             stub = meter_usage_pb2_grpc.MeterUsageStub(channel)
-            responses = stub.ReadData(
-                meter_usage_pb2.ReadRequest(
-                    timestamp_from=self.get_argument('timestamp_from', None),
-                    timestamp_to=self.get_argument('timestamp_to', None),
-                )
-            )
-            return responses
+            meter_usage_readings = []
+            responses = stub.ReadData(meter_usage_pb2.ReadRequest())
+            # Convert data from type MeterData into a simple dictionary to be JSON-encoded
+            for response in responses:
+                meter_usage_readings.append({
+                    'timestamp': response.timestamp,
+                    'value': response.value
+                })
+            return meter_usage_readings
 
-    def post(self):
-        responses = self.make_request()
-        if responses._state.code.name == 'OK':
-            self.write({'data': responses})
-        else:
+    def get(self):
+        try:
+            responses = self.make_request()
+            self.write({
+                'data': responses
+            })
+        except grpc._channel._MultiThreadedRendezvous as err:
+            # Catch any errors that may happen during the gRPC stream
             self.set_status(500)
             self.write({
-                'error': responses._state.details,
-                'debug': json.loads(responses._state.debug_error_string)
+                'error': err._state.details,
+                'debug': json.loads(err._state.debug_error_string)
             })
-
 
 class RootHandler(RequestHandler):
     def get(self):
@@ -44,6 +51,7 @@ class RootHandler(RequestHandler):
 
 
 def server_app():
+    # API routes
     urls = [
         ("/", RootHandler),
         ("/meter-usage", MeterUsageHandler)
@@ -52,6 +60,7 @@ def server_app():
 
 
 if __name__ == '__main__':
+    # Initialize the HTTP server
     app = server_app()
     app.listen(_server_port)
     _logger.info("Starting HTTP server on port %s" % _server_port)

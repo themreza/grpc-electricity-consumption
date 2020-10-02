@@ -11,13 +11,15 @@ import meter_usage_pb2_grpc
 
 _logger = logging.getLogger(__name__)
 _server_port = 9090
-
+_csv_file = '../data/meterusage.csv'
 
 class MeterUsage(meter_usage_pb2_grpc.MeterUsageServicer):
 
-    """ Read the meter usage data from the CSV file and stream it to the client """
     def ReadData(self, request, context):
-        with open('../data/meterusage.csv', 'r') as read_obj:
+        """
+        Read the meter usage data from the CSV file and stream it to the client
+        """
+        with open(_csv_file, 'r') as read_obj:
             meter_usage_csv = reader(read_obj)
 
             # Skip the CSV headers
@@ -30,10 +32,10 @@ class MeterUsage(meter_usage_pb2_grpc.MeterUsageServicer):
                 row_timestamp = int(datetime.strptime(meter_data[0], '%Y-%m-%d %H:%M:%S').timestamp())
                 row_value = float(meter_data[1])
 
-                # Apply timestamp filtering
-                if (request.timestamp_from and row_timestamp < request.timestamp_from) \
-                        or (request.timestamp_to and row_timestamp > request.timestamp_to):
-                    continue
+                # Example of possible timestamp filtering, which isn't necessary currently
+                # if (request.timestamp_from and row_timestamp < request.timestamp_from) \
+                #         or (request.timestamp_to and row_timestamp > request.timestamp_to):
+                #     continue
 
                 yield meter_usage_pb2.MeterData(
                     timestamp=row_timestamp,
