@@ -1,0 +1,5 @@
+# IDE Configurations
+.idea
+
+# Compiled Python Files
+*.py[co]

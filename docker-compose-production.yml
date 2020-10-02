@@ -1,0 +1,11 @@
+version: '3.4'
+
+services:
+  grpc-server:
+    build:
+      context: backend/grpc-server
+      dockerfile: production.Dockerfile
+  http-server:
+    build:
+      context: backend/http-server
+      dockerfile: development.Dockerfile

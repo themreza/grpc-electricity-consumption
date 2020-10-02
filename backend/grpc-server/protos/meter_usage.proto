@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package meterusage;
+
+service MeterUsage {
+  // RPC for retrieving meter usage data within a given date range.
+
+  // If no date range is provided, it will stream the entire time series. It also includes optional pagination.
+  // Since there are numerous meter usage data points collected over time, it's better to stream the results
+  // rather sending a single enormous response payload.
+  rpc ReadData(ReadRequest) returns (stream MeterData) {}
+}
+
+message ReadRequest {
+  // To retrieve a single point in time, both timestamp_from and timestamp_to must equal the same value.
+  int64 timestamp_from = 1;
+  int64 timestamp_to = 2;
+}
+
+message MeterData {
+  // Date and time of recording, stored as a Unix timestamp.
+  int64 timestamp = 1;
+
+  // Meter usage value.
+  // Using double instead of float due to an issue with Python losing decimal precision during gRPC transmission
+  double value = 2;
+}

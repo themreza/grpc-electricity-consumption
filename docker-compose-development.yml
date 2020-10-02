@@ -1,0 +1,20 @@
+version: '3.4'
+
+services:
+  grpc-server:
+    build:
+      context: backend/grpc-server
+      dockerfile: development.Dockerfile
+    volumes:
+      - './backend/grpc-server/src:/src'
+      - './backend/grpc-server/data:/data'
+    ports:
+      - '9090:9090'
+  http-server:
+    build:
+      context: backend/http-server
+      dockerfile: development.Dockerfile
+    volumes:
+      - './backend/http-server/src:/src'
+    ports:
+      - '8080:8080'
