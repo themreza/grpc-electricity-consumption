@@ -19,16 +19,30 @@ class MeterUsage(meter_usage_pb2_grpc.MeterUsageServicer):
     def ReadData(self, request, context):
         with open('../data/meterusage.csv', 'r') as read_obj:
             meter_usage_csv = reader(read_obj)
-            next(meter_usage_csv) # Skip the CSV headers
+
+            # Skip the CSV headers
+            next(meter_usage_csv)
+
+            # Stream the data points
             for meter_data in meter_usage_csv:
-                _logger.warning(float(meter_data[1]))
+
+                # Calculate the timestamp and adjust the value data type
+                row_timestamp = int(datetime.strptime(meter_data[0], '%Y-%m-%d %H:%M:%S').timestamp())
+                row_value = float(meter_data[1])
+
+                # Apply timestamp filtering
+                if (request.timestamp_from and row_timestamp < request.timestamp_from) \
+                        or (request.timestamp_to and row_timestamp > request.timestamp_to):
+                    continue
+
                 yield meter_usage_pb2.MeterData(
-                    timestamp=int(datetime.strptime(meter_data[0], '%Y-%m-%d %H:%M:%S').timestamp()),
-                    value=float(meter_data[1])
+                    timestamp=row_timestamp,
+                    value=row_value
                 )
 
 
 def serve():
+    # Initialize the gRPC server
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     meter_usage_pb2_grpc.add_MeterUsageServicer_to_server(MeterUsage(), server)
     server.add_insecure_port('[::]:%s' % _server_port)
