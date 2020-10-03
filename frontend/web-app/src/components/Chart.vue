@@ -23,11 +23,13 @@ export default {
   name: 'Chart',
   data() {
     return {
-      chart: null
+      chart: null,
+      loading: null
     }
   },
   watch: {
     meterData(val) {
+      this.loading.close()
       if (this.chart != null) this.chart.remove()
       this.renderChart(val)
     }
@@ -44,6 +46,11 @@ export default {
     }
   },
   mounted() {
+    this.loading = this.$vs.loading({
+      type: 'circles',
+      color: '#00a87d',
+      scale: 1
+    })
     this.$store.dispatch('loadData')
   },
   computed: mapState([
