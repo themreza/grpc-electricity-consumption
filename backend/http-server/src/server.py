@@ -3,7 +3,9 @@ from tornado.ioloop import IOLoop
 
 import grpc
 import logging
+import math
 import json
+import re
 
 import meter_usage_pb2
 import meter_usage_pb2_grpc
@@ -27,11 +29,21 @@ class MeterUsageHandler(RequestHandler):
             for response in responses:
                 meter_usage_readings.append({
                     'timestamp': response.timestamp,
-                    'value': response.value
+                    # Convert NaN values to null to preserve the JSON standard
+                    'value': response.value if not math.isnan(response.value) else None
                 })
             return meter_usage_readings
 
+    def set_default_headers(self):
+        # Allow CORS for localhost (development)
+        if self.request.headers.get('Origin') \
+                and re.match("^http[s]?:\/\/localhost:.*", self.request.headers.get('Origin')):
+            self.set_header("Access-Control-Allow-Origin", self.request.headers.get('Origin'))
+            self.set_header("Access-Control-Allow-Headers", "x-requested-with")
+            self.set_header('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
+
     def get(self):
+        self.set_header("Content-Type", "text/javascript; charset=UTF-8")
         try:
             responses = self.make_request()
             self.write({

@@ -14,11 +14,15 @@ visualization of the electricity consumption data.
 
 The project uses Docker and Docker Compose to for efficient development and deployment.
 
+This was my first experience with the gRPC library and I finished the assignment in one day.
+
 **Live Demo:** https://demo.tomaraei.com/grpc-electricity-consumption
 
 ## Overview
 
 ![](assets/diagram.png)
+
+![](assets/demo.gif)
 
 ## gRPC
 
@@ -51,6 +55,8 @@ python3 -m grpc_tools.protoc \
 
 ## Development
 
+### Backend
+
 ```shell script
 docker-compose -f docker-compose-development.yml up
 ```
@@ -63,6 +69,16 @@ docker-compose -f docker-compose-development.yml build
 
 [BloomRPC](https://github.com/uw-labs/bloomrpc) is a great gRPC client that could save development time and offer a
 better understanding of the gRPC protocol.
+
+### Frontend
+
+Node.js and yarn need to be installed for development.
+
+To launch an auto-reloading Node.js server, run the following command in `frontend/web-app`:
+
+```shell script
+yarn serve
+```   
 
 ## Production
 
@@ -79,7 +95,18 @@ docker-compose -f docker-compose-production.yml build
 Alternatively, we may build the images, publish them to a Docker registry and deploy with a slightly modified version
 of `docker-compose-production.yml`.
 
-## Testing 
+## Testing
+
+The backend gRPC server is tested via Python's unittest library.
+The test loads the generated protocol buffer definitions, starts a gRPC server, and uses a simple client to retrieve
+the list of meter usage data. It looks up and confirms the value of a particular timestamp to ensure all of the
+processes are working consistently.
+
+To run the test:
+
+```shell script
+python3 backend/grpc-server/src/server_test.py
+```
 
 ## Next Steps
 
@@ -87,3 +114,6 @@ While this project showcases an example use-case of the gRPC protocol, there is 
 meter usage data, which is a time series, can be upgraded from a CSV file into an InfluxDB database. This allows for
 better performance due to tag indexing and high-availability storage, and also introduces the possibility of querying
 the data based on various criteria such as date/time ranges, additional metadata, and patterns of meter usage values.
+
+Depending on the scale of the project, further unit tests and end-to-end may be implemented.
+
