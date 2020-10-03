@@ -14,6 +14,9 @@ COPY data/ ./data
 # Set the working directory
 WORKDIR /src
 
+# Run the unit tests
+RUN ["python", "server_test.py"]
+
 # Expose the server port
 EXPOSE 9090
 

@@ -97,12 +97,12 @@ of `docker-compose-production.yml`.
 
 ## Testing
 
-The backend gRPC server is tested via Python's unittest library.
+The backend gRPC server is automatically tested via Python's unittest library during the Docker build for production.
 The test loads the generated protocol buffer definitions, starts a gRPC server, and uses a simple client to retrieve
 the list of meter usage data. It looks up and confirms the value of a particular timestamp to ensure all of the
 processes are working consistently.
 
-To run the test:
+To run the test manually:
 
 ```shell script
 python3 backend/grpc-server/src/server_test.py

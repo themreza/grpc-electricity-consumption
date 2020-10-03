@@ -8,4 +8,12 @@ services:
   http-server:
     build:
       context: backend/http-server
-      dockerfile: development.Dockerfile
+      dockerfile: production.Dockerfile
+    ports:
+      - '8080:8080'
+  web-app:
+    build:
+      context: frontend/web-app
+      dockerfile: production.Dockerfile
+    ports:
+      - '3000:3000'
