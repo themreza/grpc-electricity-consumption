@@ -14,23 +14,20 @@ before_script:
 build-grpc-server:
   stage: build
   script:
-    - docker pull themreza/ec-grpc-server:latest || true
-    - docker build --cache-from themreza/ec-grpc-server:latest --tag themreza/ec-grpc-server:$CI_COMMIT_SHA --tag themreza/ec-grpc-server:latest -f backend/grpc-server/production.Dockerfile backend/grpc-server
-    - docker push themreza/ec-grpc-server:$CI_COMMIT_SHA
-    - docker push themreza/ec-grpc-server:latest
+    - docker pull $CI_REGISTRY_IMAGE:grpc-server || true
+    - docker build --cache-from $CI_REGISTRY_IMAGE:grpc-server --tag $CI_REGISTRY_IMAGE:grpc-server -f backend/grpc-server/production.Dockerfile backend/grpc-server
+    - docker push $CI_REGISTRY_IMAGE:grpc-server
 
 build-http-server:
   stage: build
   script:
-    - docker pull themreza/ec-http-server:latest || true
-    - docker build --cache-from themreza/ec-http-server:latest --tag themreza/ec-http-server:$CI_COMMIT_SHA --tag themreza/ec-http-server:latest -f backend/http-server/production.Dockerfile backend/http-server
-    - docker push themreza/ec-http-server:$CI_COMMIT_SHA
-    - docker push themreza/ec-http-server:latest
+    - docker pull $CI_REGISTRY_IMAGE:http-server || true
+    - docker build --cache-from $CI_REGISTRY_IMAGE:http-server --tag $CI_REGISTRY_IMAGE:http-server -f backend/http-server/production.Dockerfile backend/http-server
+    - docker push $CI_REGISTRY_IMAGE:http-server
 
 build-web-app:
   stage: build
   script:
-    - docker pull themreza/ec-web-app:latest || true
-    - docker build --cache-from themreza/ec-web-app:latest --tag themreza/ec-web-app:$CI_COMMIT_SHA --tag themreza/ec-web-app:latest -f frontend/web-app/production.Dockerfile frontend/web-app
-    - docker push themreza/ec-web-app:$CI_COMMIT_SHA
-    - docker push themreza/ec-web-app:latest
+    - docker pull $CI_REGISTRY_IMAGE:web-app || true
+    - docker build --cache-from $CI_REGISTRY_IMAGE:web-app --tag $CI_REGISTRY_IMAGE:web-app -f frontend/web-app/production.Dockerfile frontend/web-app
+    - docker push $CI_REGISTRY_IMAGE:web-app
