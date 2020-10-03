@@ -1,0 +1,36 @@
+image: docker:19.03.12
+
+services:
+  - docker:19.03.12-dind
+
+variables:
+  # Use TLS https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#tls-enabled
+  DOCKER_HOST: tcp://docker:2376
+  DOCKER_TLS_CERTDIR: "/certs"
+
+before_script:
+  - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+
+build-grpc-server:
+  stage: build
+  script:
+    - docker pull themreza/ec-grpc-server:latest || true
+    - docker build --cache-from themreza/ec-grpc-server:latest --tag themreza/ec-grpc-server:$CI_COMMIT_SHA --tag themreza/ec-grpc-server:latest -f backend/grpc-server/production.Dockerfile backend/grpc-server
+    - docker push themreza/ec-grpc-server:$CI_COMMIT_SHA
+    - docker push themreza/ec-grpc-server:latest
+
+build-http-server:
+  stage: build
+  script:
+    - docker pull themreza/ec-http-server:latest || true
+    - docker build --cache-from themreza/ec-http-server:latest --tag themreza/ec-http-server:$CI_COMMIT_SHA --tag themreza/ec-http-server:latest -f backend/http-server/production.Dockerfile backend/http-server
+    - docker push themreza/ec-http-server:$CI_COMMIT_SHA
+    - docker push themreza/ec-http-server:latest
+
+build-web-app:
+  stage: build
+  script:
+    - docker pull themreza/ec-web-app:latest || true
+    - docker build --cache-from themreza/ec-web-app:latest --tag themreza/ec-web-app:$CI_COMMIT_SHA --tag themreza/ec-web-app:latest -f frontend/web-app/production.Dockerfile frontend/web-app
+    - docker push themreza/ec-web-app:$CI_COMMIT_SHA
+    - docker push themreza/ec-web-app:latest
