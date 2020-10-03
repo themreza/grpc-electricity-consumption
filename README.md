@@ -16,7 +16,7 @@ The project uses Docker and Docker Compose to for efficient development and depl
 
 This was my first experience with the gRPC library and I finished the assignment in one day.
 
-**Live Demo:** https://demo.tomaraei.com/grpc-electricity-consumption
+**Live Demo:** https://ec-demo.tomaraei.com
 
 ## Overview
 
